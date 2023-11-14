@@ -1,7 +1,6 @@
 package org.example;
 
 import Entidades.*;
-import com.opencsv.CSVReader;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -9,38 +8,50 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class PronosticosDeportivos
-{
-    public static void main( String[] args )
-    {
+public class PronosticosDeportivos {
+    public static void main(String[] args) {
 
         //Crear Listas
-        List<Partido> partidos = new ArrayList<Partido>();
-        List<Pronostico> pronosticos = new ArrayList<Pronostico>();
+        int rondas = 1;
+        List<Partido> partidos = new ArrayList<>();
+        List<Pronostico> pronosticos = new ArrayList<>();
+        List<Participante> participanteLista = new ArrayList<>();
 
         //leer archivo resultados.csv
-        String resultadosArchivo = "C:\\Users\\vaiop\\OneDrive\\Documentos\\Pato\\UTN-Neoris\\TP Integrador JAVA\\TP_Integrador_PronosticosDeportivos\\src\\main\\resources\\resultados.csv";
+        String resultadosArchivo = "C:\\Users\\vaiop\\OneDrive\\Documentos\\Pato\\UTN-Neoris\\ENTREGA FINAL\\Parte 2 - GIT\\TP_Integrador_PronosticosDeportivos\\src\\main\\resources\\resultados.csv";
         leerArchivoResultados(resultadosArchivo, partidos);
         //leer archivo pronosticos.csv
-        String pronosticosArchivo = "C:\\Users\\vaiop\\OneDrive\\Documentos\\Pato\\UTN-Neoris\\TP Integrador JAVA\\TP_Integrador_PronosticosDeportivos\\src\\main\\resources\\pronosticos.csv";
-        leerArchivoPronosticos(pronosticosArchivo,pronosticos,partidos);
+        String pronosticosArchivo = "C:\\Users\\vaiop\\OneDrive\\Documentos\\Pato\\UTN-Neoris\\ENTREGA FINAL\\Parte 2 - GIT\\TP_Integrador_PronosticosDeportivos\\src\\main\\resources\\pronosticos.csv";
+        leerArchivoPronosticos(pronosticosArchivo, pronosticos, partidos);
 
-        for (Partido p : partidos){
+        for (Partido p : partidos) {
             System.out.println("Equipo 1 :" + p.getEquipo1().getNombre());
             System.out.println(p.resultado(p.getEquipo1()));
             System.out.println("Equipo 2 :" + p.getEquipo2().getNombre());
             System.out.println(p.resultado(p.getEquipo2()));
         }
+
+        for (Pronostico pronostico : pronosticos) {
+            cargarParticipantes(participanteLista,pronostico.getParticipante());
+        }
+
         for (Pronostico pronostico : pronosticos){
-            System.out.println("Equipo elegido :" + pronostico.getEquipo().getNombre());
-            System.out.println(pronostico.puntos());
+            if(pronostico.getParticipante().equals("Mariana")){
+                System.out.println("MARIANA");
+                System.out.println("Equipo elegido :" + pronostico.getEquipo().getNombre());
+                System.out.println(pronostico.puntos());
+            }else{
+                System.out.println("PEDRO");
+                System.out.println("Equipo elegido :" + pronostico.getEquipo().getNombre());
+                System.out.println(pronostico.puntos());
+            }
+
 
         }
-        Ronda ronda = new Ronda("ronda 1", partidos);
-        System.out.println("Total de Puntos Obtenidos en " + ronda.getNumero() +" :"+ ronda.Puntos(pronosticos));
+        Ronda ronda = new Ronda(rondas, partidos);
+        System.out.println("Total de Puntos Obtenidos en " + ronda.getNumRonda() + " :" + ronda.Puntos(pronosticos));
 
     }
-
 
 
     //METODO QUE LEE ARCHIVO "RESULTADOS" Y CREA LISTA DE PARTIDOS
@@ -51,6 +62,7 @@ public class PronosticosDeportivos
         // por ultimo retorna una lista de estos partidos.
         BufferedReader lector;
         String linea;
+
         try {
             lector = new BufferedReader(new FileReader(resultados));
             while ((linea = lector.readLine()) != null) {
@@ -58,11 +70,12 @@ public class PronosticosDeportivos
                 String[] lineaArray = linea.split(";");
 
                 //Se crean las variables y se le asignan los datos de cada posicion del array de strings
-                String numRonda = lineaArray[0];
+                //String numRonda = lineaArray[0];
                 Equipo equipo1 = new Equipo(lineaArray[1], "equipo1");
                 Equipo equipo2 = new Equipo(lineaArray[4], "equipo2");
                 int golesEquipo1 = Integer.parseInt(lineaArray[2]);
                 int golesEquipo2 = Integer.parseInt(lineaArray[3]);
+                String numRonda = lineaArray[0];
 
                 //Se instancia un nuevo objeto de la clase partido con los parametros requeridos por su constructor
                 Partido partido = new Partido(equipo1, equipo2, golesEquipo1, golesEquipo2);
@@ -78,35 +91,6 @@ public class PronosticosDeportivos
         }
         return partidos;
     }
-
-    /*
-    //METODO QUE CREA RONDAS
-    private static List<Ronda> leerArchivoResultados(String resultados, List<Partido> partidos, List<Ronda> rondas) {
-        BufferedReader lector;
-        String linea;
-        try {
-            lector = new BufferedReader(new FileReader(resultados));
-            while ((linea = lector.readLine()) != null) {
-                //Se crea un array de string por cada linea
-                String[] lineaArray = linea.split(";");
-
-                String numRonda = lineaArray[0];
-
-                //Se instancia un nuevo objeto de la clase partido con los parametros requeridos por su constructor
-                Ronda ronda = new Ronda(numRonda);
-                System.out.println(ronda.toString());
-
-                //Se agrega cada partido en el arreglo partidos
-                partidos.add(partido);
-
-            }
-
-        } catch (Exception e) {
-            System.out.println("Error al leer el archivo partidos");
-        }
-        return partidos;
-    }
-    */
 
 
     //METODO QUE LEE ARCHIVO "PRONOSTICOS" Y CREA LISTA DE PRONOSTICOS
@@ -135,28 +119,29 @@ public class PronosticosDeportivos
                 ResultadoEnum resultado1 = null;
 
                 //Controlo donde esta elegida la "x", para seleccionar equipo elegido y resultado (Consigo dato EQUIPO y RESULTADO)
-                if(linea2.equals("x")){
+                if (linea2.equals("x")) {
                     resultado1 = ResultadoEnum.ganador;
-                    equipoElegido  = equipo1;
+                    equipoElegido = equipo1;
 
-                }else if(linea4.equals("x")){
+                } else if (linea4.equals("x")) {
                     resultado1 = ResultadoEnum.ganador;
                     equipoElegido = equipo2;
-                }else{
+                } else {
                     resultado1 = ResultadoEnum.empate;
 
                 }
 
                 //Recorro la lista de partidos creada antes, para ver de que partido corresponde el pronostico (Consigo dato PARTIDO)
-                for (Partido p:partidos) {
-                    if (equipo1.getNombre().equals(p.getEquipo1().getNombre()) && equipo2.getNombre().equals(p.getEquipo2().getNombre())){
+                for (Partido p : partidos) {
+                    if (equipo1.getNombre().equals(p.getEquipo1().getNombre()) && equipo2.getNombre().equals(p.getEquipo2().getNombre())) {
                         partidoElegido = p;
                     }
                 }
 
                 //Finalmente se instancia un nuevo objeto de la clase pronostico con los parametros requeridos por su constructor
 
-                Pronostico pronostico = new Pronostico(partidoElegido,equipoElegido,resultado1,nombreParticipante);
+
+                Pronostico pronostico = new Pronostico(partidoElegido, equipoElegido, resultado1, nombreParticipante);
                 System.out.println(pronostico.toString());
 
                 //Se agrega cada partido en el arreglo partidos
@@ -169,4 +154,15 @@ public class PronosticosDeportivos
         return pronosticos;
     }
 
+
+    //METODO QUE CARGA PARTICIPANTES
+    private static List<Participante> cargarParticipantes(List<Participante> participantesLista,String nombre) {
+
+        Participante participante = new Participante(nombre);
+
+        participantesLista.add(participante);
+
+        return participantesLista;
+
+    }
 }

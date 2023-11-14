@@ -5,7 +5,8 @@ public class Participante {
     private int totalPuntos;
 
 
-    public Participante() {
+    public Participante(String nombre) {
+        Nombre = nombre;
     }
 
     public Participante(String nombre, int totalPuntos) {

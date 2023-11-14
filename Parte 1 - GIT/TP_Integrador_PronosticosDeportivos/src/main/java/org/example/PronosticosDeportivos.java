@@ -60,7 +60,7 @@ public class PronosticosDeportivos
             while ((linea = lector.readLine()) != null) {
                 //Se crea un array de string por cada linea
                 String[] lineaArray = linea.split(";");
-                //int nroRonda = Integer.parseInt(lineaArray[4]);
+
                 //Se crean las variables y se le asignan los datos de cada posicion del array de strings
                 Equipo equipo1 = new Equipo(lineaArray[0], "equipo1");
                 Equipo equipo2 = new Equipo(lineaArray[3], "equipo2");
@@ -94,7 +94,7 @@ public class PronosticosDeportivos
             while ((linea = lector.readLine()) != null) {
                 //Se crea un array de string por cada linea
                 String[] lineaArray = linea.split(";");
-                //int nroRonda = Integer.parseInt(lineaArray[4]);
+                
                 //Se crean las variables y se le asignan los datos de cada posicion del array de strings
                 Equipo equipo1 = new Equipo(lineaArray[0], "equipo1");
                 String linea1 = lineaArray[1];

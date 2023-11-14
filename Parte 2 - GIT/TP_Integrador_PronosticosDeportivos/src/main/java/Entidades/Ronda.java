@@ -4,28 +4,30 @@ package Entidades;
 import java.util.List;
 
 public class Ronda {
-    private String numero;
+    private int numRonda;
     private List<Partido> partidos;
 
     //Constructor vacio y Constructor completo
 
 
-    public Ronda(String numero) {
-        this.numero = numero;
+    public Ronda(int numRonda) {
+        this.numRonda = numRonda;
     }
 
-    public Ronda(String numero, List<Partido> partidos) {
-        this.numero = numero;
+    public Ronda(int numRonda, List<Partido> partidos) {
+        this.numRonda = numRonda;
         this.partidos = partidos;
     }
 
     //Getters y Setters
-    public String getNumero() {
-        return numero;
+
+
+    public int getNumRonda() {
+        return numRonda;
     }
 
-    public void setNumero(String numero) {
-        this.numero = numero;
+    public void setNumRonda(int numRonda) {
+        this.numRonda = numRonda;
     }
 
     public List<Partido> getPartidos() {
