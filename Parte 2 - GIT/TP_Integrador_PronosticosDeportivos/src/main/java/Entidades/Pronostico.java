@@ -58,7 +58,7 @@ public class Pronostico {
 
         if (partido.resultado(equipo) == resultado) {
             return 1;
-        } else if ((resultado == ResultadoEnum.empate) && (partido.resultado(equipo) == ResultadoEnum.empate)) {
+        } else if (partido.resultado(equipo) == resultado) {
             return 1;
         } else {
             return 0;

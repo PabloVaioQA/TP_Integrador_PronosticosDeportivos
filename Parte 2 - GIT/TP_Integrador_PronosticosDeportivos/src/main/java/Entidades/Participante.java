@@ -1,25 +1,26 @@
 package Entidades;
 
+
+import java.util.Objects;
+
 public class Participante {
-    private String Nombre;
+    private String nombre;
     private int totalPuntos;
 
-
-    public Participante(String nombre) {
-        Nombre = nombre;
+    public Participante() {
     }
 
     public Participante(String nombre, int totalPuntos) {
-        Nombre = nombre;
+        this.nombre = nombre;
         this.totalPuntos = totalPuntos;
     }
 
     public String getNombre() {
-        return Nombre;
+        return nombre;
     }
 
     public void setNombre(String nombre) {
-        Nombre = nombre;
+        this.nombre = nombre;
     }
 
     public int getTotalPuntos() {
@@ -33,7 +34,8 @@ public class Participante {
     @Override
     public String toString() {
         return "Participante{" +
-                "Nombre='" + Nombre + '\'' +
+                "nombre='" + nombre + '\'' +
+                ", totalPuntos=" + totalPuntos +
                 '}';
     }
 }
